@@ -8,9 +8,12 @@
 import UIKit
 
 class DetailView: UIView {
+    
+    //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         viewConfigure()
+        dropButtonsShadow()
         setupViews()
         setConstraints()
     }
@@ -18,18 +21,17 @@ class DetailView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - SubViews
     var productImage: UIImageView = {
         let imageView = UIImageView(frame: .zero)
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderWidth = 1
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     var categoryIcon: UIImageView = {
         let imageView = UIImageView(frame: .zero)
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderWidth = 1
+        imageView.contentMode = .topLeft
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -38,8 +40,7 @@ class DetailView: UIView {
         let label = UILabel(frame: .zero)
         label.layer.borderWidth = 1
         label.numberOfLines = 0
-        label.font = UIFont(name: "HelveticaNeue-Bold", size: 13.0)
-        label.sizeToFit()
+        label.font = UIFont(name: "HelveticaNeue-Bold", size: 15.0)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -47,7 +48,8 @@ class DetailView: UIView {
         let label = UILabel(frame: .zero)
         label.layer.borderWidth = 1
         label.numberOfLines = 0
-        label.font = UIFont(name: "HelveticaNeue-Bold", size: 13.0)
+        label.font = UIFont(name: "SF-Pro-Display", size: 15.0)
+        label.textColor = .gray
         label.sizeToFit()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -55,7 +57,7 @@ class DetailView: UIView {
     public var buyButton: UIButton = {
         let button = UIButton(frame: .zero)
         button.setTitle("Где купить?", for: .normal)
-        button.layer.borderWidth = 1
+//        button.layer.borderWidth = 1
         button.titleLabel?.font = UIFont(name: "SF-Pro-Display", size: 12)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.titleLabel?.textAlignment = .center
@@ -66,11 +68,26 @@ class DetailView: UIView {
     public var favoritesButton: UIButton = {
         let button = UIButton(frame: .zero)
         button.setImage(UIImage(named: "starPic"), for: .normal)
-        button.layer.borderWidth = 1
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
+    //MARK: - Visual effects
+    private func dropButtonsShadow(){
+        buyButton.layer.shadowColor = UIColor(red: 0.282,
+                                         green: 0.298,
+                                         blue: 0.298,
+                                         alpha: 0.15).cgColor
+        buyButton.layer.shadowRadius = 7.0
+        buyButton.layer.shadowOpacity = 0.7
+        buyButton.layer.shadowOffset = CGSize(width: 2.5, height: 2.5)
+        let cgPath = UIBezierPath(roundedRect: buyButton.bounds,
+                                  byRoundingCorners: [.allCorners],
+                                  cornerRadii: CGSize(width: 6, height: 6)).cgPath
+        buyButton.layer.shadowPath = cgPath
+    }
+    
+    //MARK: - View Configure
     private func viewConfigure(){
         self.backgroundColor = .white
     }
@@ -83,6 +100,7 @@ class DetailView: UIView {
         self.addSubview(buyButton)
     }
     
+    //MARK: - Constrsints
     private func setConstraints(){
         productImage.widthAnchor.constraint(equalToConstant: 117).isActive = true
         productImage.heightAnchor.constraint(equalToConstant: 183).isActive = true
@@ -91,8 +109,8 @@ class DetailView: UIView {
         productImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -131).isActive = true
         productImage.bottomAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -32).isActive = true
         
-        categoryIcon.widthAnchor.constraint(equalToConstant: 141).isActive = true
-        categoryIcon.heightAnchor.constraint(equalToConstant: 139).isActive = true
+        categoryIcon.widthAnchor.constraint(equalToConstant: 140).isActive = true
+        categoryIcon.heightAnchor.constraint(equalToConstant: 140).isActive = true
         categoryIcon.topAnchor.constraint(equalTo: self.topAnchor, constant: 116).isActive = true
         categoryIcon.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 25).isActive = true
         categoryIcon.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -208).isActive = true
