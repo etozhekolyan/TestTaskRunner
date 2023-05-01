@@ -16,13 +16,13 @@ protocol NetworkServiceProtocol{
 }
 
 class NetworkService: NetworkServiceProtocol{
-    var provider: MoyaProvider<ProductsRequests>? = MoyaProvider<ProductsRequests>()
+    var provider: MoyaProvider<ProductsRequests>? = MoyaProvider<ProductsRequests>(plugins: [NetworkLoggerPlugin()])
+    
     func getProductsListData(completion: @escaping (([ProgectDataListModel]) -> Void)) {
         provider?.request(.getProductsList, completion: { result in
             switch result{
             case .success(let successResponse):
                 do{
-                    try successResponse.filterSuccessfulStatusCodes()
                     let decodedResponse = try JSONDecoder().decode([ProgectDataListModel].self, from: successResponse.data)
                     completion(decodedResponse)
                 }catch(let jsonError){
@@ -62,7 +62,6 @@ class NetworkService: NetworkServiceProtocol{
                     print("Here \(jsonError)")
                 }
             case .failure(let failureResponse):
-                
                 print("Here \(failureResponse)")
             }
         })
@@ -82,10 +81,6 @@ enum ProductsRequests{
     case getProductsList
     case getProductInfo(id: Int)
     case getFilteredList(searchRequest: String)
-    
-    func encodeSearchRequest(searchRequest: String) -> String{
-        return searchRequest.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-    }
 }
 
 extension ProductsRequests: TargetType{
@@ -96,10 +91,8 @@ extension ProductsRequests: TargetType{
             return "/api/ppp/index/"
         case .getProductInfo(let id):
             return "/api/ppp/item/?id=\(id)"
-        case .getFilteredList(let searchRequest):
-            let encodedSearchRequest = encodeSearchRequest(searchRequest: searchRequest)
-            
-            return "/api/ppp/index/?search=\(encodedSearchRequest)"
+        case .getFilteredList:
+            return "/api/ppp/index/"
         }
     }
     var method: Moya.Method {
@@ -110,7 +103,9 @@ extension ProductsRequests: TargetType{
     }
     var task: Moya.Task {
         switch self{
-        case .getProductsList, .getProductInfo, .getFilteredList:
+        case .getFilteredList(let searchRequest):
+            return .requestParameters(parameters: ["Search" : searchRequest], encoding: URLEncoding.queryString)
+        case .getProductsList, .getProductInfo:
             return .requestPlain
         }
     }

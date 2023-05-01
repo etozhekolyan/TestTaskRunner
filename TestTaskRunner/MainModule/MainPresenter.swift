@@ -8,6 +8,8 @@
 import Foundation
 
 protocol MainPresenterProtocol{
+    var dataList: [ProgectDataListModel]? { get set }
+    var filterDataList: [ProgectDataListModel]? { get set }
     var productsListData: [ProssecedProductListData]? { get set }
     var filteredProductListData: [ProssecedProductListData]? { get set }
     init(view: MainViewControllerProtocol, network: NetworkServiceProtocol, router: RouterProtocol?)
@@ -16,6 +18,8 @@ protocol MainPresenterProtocol{
 }
 
 class MainPresenter: MainPresenterProtocol{
+    var dataList: [ProgectDataListModel]?
+    var filterDataList: [ProgectDataListModel]?
     var productsListData: [ProssecedProductListData]?
     var filteredProductListData: [ProssecedProductListData]?
     var view: MainViewControllerProtocol?
@@ -31,14 +35,14 @@ class MainPresenter: MainPresenterProtocol{
     
     private func sendRequest(){
         network?.getProductsListData(completion: { [weak self] productListDataSet in
-            self?.productsListData = self?.processProductListDataSet(receivedData: productListDataSet)
+            self?.dataList = productListDataSet
             self?.view?.loadingComplete()
         })
     }
     
     func sendSearchRequest(searchRequset: String) {
         network?.getFilteredProductList(searchRequest: searchRequset, completion: { [weak self] filteredListData in
-            self?.filteredProductListData = self?.processProductListDataSet(receivedData: filteredListData)
+            self?.filterDataList = filteredListData
             
             self?.view?.loadingComplete()
         })
@@ -52,7 +56,7 @@ class MainPresenter: MainPresenterProtocol{
                                                    name: item.name,
                                                    description: item.description))
         }
-        
+
         return result
     }
     

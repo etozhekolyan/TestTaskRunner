@@ -39,6 +39,7 @@ class MainViewController: UIViewController {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.contentInset = UIEdgeInsets(top: 24, left: 16, bottom: 0, right: 16)
+        collectionView.keyboardDismissMode = .onDrag
         collectionView.register(ItemCard.self, forCellWithReuseIdentifier: ItemCard.cellID)
         collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -47,15 +48,19 @@ class MainViewController: UIViewController {
     }()
     //MARK: - Suppert functions
     private func setupMainVC(){
-        customiseNavigationBar()
+//        customiseNavigationBar()
         searchView = SearchTitleView(frame: CGRect(x: 0, y: 0, width: 280, height: 41))
         searchView?.searchBar.delegate = self
         let searchButton = createSearchButton(selector: #selector(searchButtonHundler))
         navigationItem.rightBarButtonItem = searchButton
         navigationItem.titleView = searchView
     }
+    private func setupPath(path: String?) -> String? {
+        let completePath = "http://shans.d2.i-partner.ru\(path!)"
+        return completePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+    }
     //MARK: - Action hundlers
-    @objc func searchButtonHundler(){
+    @objc func searchButtonHundler() {
         searchView?.titleName.isHidden = true
         searchView?.searchBar.isHidden = false
     }
@@ -93,24 +98,25 @@ extension MainViewController: UICollectionViewDelegateFlowLayout{
 //MARK: - Collection view data sourse
 extension MainViewController: UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if self.searchBarIsEmpty {
-            return self.presenter?.productsListData?.count ?? 0
+        if searchBarIsEmpty{
+            return presenter?.dataList?.count ?? 0
+        }else{
+            return presenter?.filterDataList?.count ?? 0
         }
-        return self.presenter?.filteredProductListData?.count ?? 0
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCard.cellID, for: indexPath) as! ItemCard
+        var unit: ProgectDataListModel
         
         if searchBarIsEmpty{
-            cell.itemsHead.text = self.presenter?.productsListData?[indexPath.row].name ?? "--"
-            cell.itemsDiscription.text = self.presenter?.productsListData?[indexPath.row].description ?? "--"
-            cell.itemsPicture.image = UIImage(data: presenter?.productsListData?[indexPath.row].image ?? Data()) // это что?
+            unit = presenter?.dataList?[indexPath.row] ?? ProgectDataListModel()
         }else{
-            cell.itemsHead.text = self.presenter?.filteredProductListData?[indexPath.row].name ?? "--"
-            cell.itemsDiscription.text = self.presenter?.filteredProductListData?[indexPath.row].description ?? "--"
-            cell.itemsPicture.image = UIImage(data: presenter?.filteredProductListData?[indexPath.row].image ?? Data()) // это что?
+            unit = presenter?.filterDataList?[indexPath.row] ?? ProgectDataListModel()
         }
         
+        cell.itemsHead.text = unit.name
+        cell.itemsDiscription.text = unit.description
+        cell.itemsPicture.imageFromServerURL("http://shans.d2.i-partner.ru\(unit.categories!.image!)", placeHolder: nil)
         
         return cell
     }
@@ -118,8 +124,7 @@ extension MainViewController: UICollectionViewDataSource{
 //MARK: - Additon for NavigationBar
 extension UIViewController{
     public func customiseNavigationBar(){
-//        navigationController?.navigationBar.barTintColor = .green
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.green]
+        navigationController?.navigationBar.tintColor = .green
     }
     func createSearchButton(selector: Selector) -> UIBarButtonItem{
         let button = UIButton(type: .system) // magnifyingglass
@@ -139,5 +144,40 @@ extension UIViewController{
 extension MainViewController: MainViewControllerProtocol{
     func loadingComplete() {
         cardsCollectionView.reloadData()
+    }
+}
+
+
+extension UIImageView {
+
+    
+        func imageFromServerURL(_ URLString: String, placeHolder: UIImage?) {
+
+        self.image = nil
+        //If imageurl's imagename has space then this line going to work for this
+        let imageServerUrl = URLString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        
+
+        if let url = URL(string: imageServerUrl) {
+            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+
+                //print("RESPONSE FROM API: \(response)")
+                if error != nil {
+                    print("ERROR LOADING IMAGES FROM URL: \(error)")
+                    DispatchQueue.main.async {
+                        self.image = placeHolder
+                    }
+                    return
+                }
+                DispatchQueue.main.async {
+                    if let data = data {
+                        if let downloadedImage = UIImage(data: data) {
+                       
+                            self.image = downloadedImage
+                        }
+                    }
+                }
+            }).resume()
+        }
     }
 }
