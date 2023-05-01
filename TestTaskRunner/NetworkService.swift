@@ -9,21 +9,20 @@ import Foundation
 import Moya
 
 protocol NetworkServiceProtocol{
-    func getProductsListData(completion: @escaping (([ProgectDataListModel]) -> Void))
+    func getProductsList(completion: @escaping (([ProductsModel]) -> Void))
     func getDetailData(id: Int, completion: @escaping ((DetailProductDataModel) -> Void))
-    func getFilteredProductList(searchRequest: String, completion: @escaping (([ProgectDataListModel]) -> Void))
-    func loadPicture(path: String?) -> Data?
+    func getFilteredData(searchRequest: String, completion: @escaping (([ProductsModel]) -> Void))
 }
 
 class NetworkService: NetworkServiceProtocol{
     var provider: MoyaProvider<ProductsRequests>? = MoyaProvider<ProductsRequests>(plugins: [NetworkLoggerPlugin()])
     
-    func getProductsListData(completion: @escaping (([ProgectDataListModel]) -> Void)) {
+    func getProductsList(completion: @escaping (([ProductsModel]) -> Void)) {
         provider?.request(.getProductsList, completion: { result in
             switch result{
             case .success(let successResponse):
                 do{
-                    let decodedResponse = try JSONDecoder().decode([ProgectDataListModel].self, from: successResponse.data)
+                    let decodedResponse = try JSONDecoder().decode([ProductsModel].self, from: successResponse.data)
                     completion(decodedResponse)
                 }catch(let jsonError){
                     print(jsonError)
@@ -35,7 +34,7 @@ class NetworkService: NetworkServiceProtocol{
     }
     
     func getDetailData(id: Int, completion: @escaping ((DetailProductDataModel) -> Void)) {
-        provider?.request(.getProductInfo(id: id), completion: { result in
+        provider?.request(.getDetailData(id: id), completion: { result in
             switch result{
             case .success(let successResponse):
                 do{
@@ -50,12 +49,12 @@ class NetworkService: NetworkServiceProtocol{
         })
     }
     
-    func getFilteredProductList(searchRequest: String, completion: @escaping (([ProgectDataListModel]) -> Void)) {
-        provider?.request(.getFilteredList(searchRequest: searchRequest), completion: { result in
+    func getFilteredData(searchRequest: String, completion: @escaping (([ProductsModel]) -> Void)) {
+        provider?.request(.getFilteredData(searchRequest: searchRequest), completion: { result in
             switch result{
             case .success(let sucssesResponse):
                 do{
-                    let decodedData = try JSONDecoder().decode([ProgectDataListModel].self, from: sucssesResponse.data)
+                    let decodedData = try JSONDecoder().decode([ProductsModel].self, from: sucssesResponse.data)
                     
                     completion(decodedData)
                 }catch(let jsonError){
@@ -66,21 +65,13 @@ class NetworkService: NetworkServiceProtocol{
             }
         })
     }
-    
-    func loadPicture(path: String?) -> Data? {
-        guard let checkedPath = path else {return nil}
-        let completePath = "http://shans.d2.i-partner.ru\(checkedPath)"
-        let encodedURL = completePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        guard let url = URL(string: encodedURL) else {return nil}
-        return try? Data(contentsOf: url)
-    }
 }
 
 
 enum ProductsRequests{
     case getProductsList
-    case getProductInfo(id: Int)
-    case getFilteredList(searchRequest: String)
+    case getDetailData(id: Int)
+    case getFilteredData(searchRequest: String)
 }
 
 extension ProductsRequests: TargetType{
@@ -89,23 +80,23 @@ extension ProductsRequests: TargetType{
         switch self {
         case .getProductsList:
             return "/api/ppp/index/"
-        case .getProductInfo(let id):
+        case .getDetailData(let id):
             return "/api/ppp/item/?id=\(id)"
-        case .getFilteredList:
+        case .getFilteredData:
             return "/api/ppp/index/"
         }
     }
     var method: Moya.Method {
         switch self{
-        case .getProductInfo, .getProductsList, .getFilteredList:
+        case .getDetailData, .getProductsList, .getFilteredData:
             return .get
         }
     }
     var task: Moya.Task {
         switch self{
-        case .getFilteredList(let searchRequest):
+        case .getFilteredData(let searchRequest):
             return .requestParameters(parameters: ["search" : searchRequest], encoding: URLEncoding.queryString)
-        case .getProductsList, .getProductInfo:
+        case .getProductsList, .getDetailData:
             return .requestPlain
         }
     }

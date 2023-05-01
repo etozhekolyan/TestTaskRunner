@@ -26,7 +26,7 @@
 		4F22B37A29FBCC2B00B215EA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F22B37929FBCC2B00B215EA /* MainViewController.swift */; };
 		4F22B37F29FBCC2D00B215EA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F22B37E29FBCC2D00B215EA /* Assets.xcassets */; };
 		4F22B38229FBCC2D00B215EA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F22B38029FBCC2D00B215EA /* LaunchScreen.storyboard */; };
-		4F22B38A29FBD55000B215EA /* ItemCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F22B38929FBD55000B215EA /* ItemCard.swift */; };
+		4F22B38A29FBD55000B215EA /* ProductCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F22B38929FBD55000B215EA /* ProductCardCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,7 +47,7 @@
 		4F22B37E29FBCC2D00B215EA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4F22B38129FBCC2D00B215EA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4F22B38329FBCC2D00B215EA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4F22B38929FBD55000B215EA /* ItemCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCard.swift; sourceTree = "<group>"; };
+		4F22B38929FBD55000B215EA /* ProductCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCardCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +70,7 @@
 			children = (
 				4F22B37929FBCC2B00B215EA /* MainViewController.swift */,
 				4F16199129FCE22C00E726C5 /* SearchTitleView.swift */,
-				4F22B38929FBD55000B215EA /* ItemCard.swift */,
+				4F22B38929FBD55000B215EA /* ProductCardCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -218,7 +218,7 @@
 				4F1619AC29FD6D6700E726C5 /* DetailProductDataModel.swift in Sources */,
 				4F16199229FCE22D00E726C5 /* SearchTitleView.swift in Sources */,
 				4F16199D29FD1E0900E726C5 /* NetworkService.swift in Sources */,
-				4F22B38A29FBD55000B215EA /* ItemCard.swift in Sources */,
+				4F22B38A29FBD55000B215EA /* ProductCardCell.swift in Sources */,
 				4F1619AE29FD6DDB00E726C5 /* DetailPresenter.swift in Sources */,
 				4F16199729FD1D6B00E726C5 /* MainPresenter.swift in Sources */,
 				4F22B37829FBCC2B00B215EA /* SceneDelegate.swift in Sources */,

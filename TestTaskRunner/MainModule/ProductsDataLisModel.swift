@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct ProgectDataListModel: Decodable{
+struct ProductsModel: Decodable{
     var id: Int?
     var image: String?
     var categories: Categories?
@@ -19,14 +19,5 @@ struct Categories: Decodable{
     var icon: String?
     var image: String?
     var name: String?
-}
-
-
-//MARK: - Converted data
-struct ProssecedProductListData{
-    var id: Int?
-    var image: Data?
-    var name: String?
-    var description: String?
 }
 

@@ -8,20 +8,16 @@
 import Foundation
 
 protocol MainPresenterProtocol{
-    var dataList: [ProgectDataListModel]? { get set }
-    var filterDataList: [ProgectDataListModel]? { get set }
-    var productsListData: [ProssecedProductListData]? { get set }
-    var filteredProductListData: [ProssecedProductListData]? { get set }
+    var products: [ProductsModel]? { get set }
+    var filteredProducts: [ProductsModel]? { get set }
     init(view: MainViewControllerProtocol, network: NetworkServiceProtocol, router: RouterProtocol?)
     func showDetail(id: Int)
     func sendSearchRequest(searchRequset: String)
 }
 
 class MainPresenter: MainPresenterProtocol{
-    var dataList: [ProgectDataListModel]?
-    var filterDataList: [ProgectDataListModel]?
-    var productsListData: [ProssecedProductListData]?
-    var filteredProductListData: [ProssecedProductListData]?
+    var products: [ProductsModel]?
+    var filteredProducts: [ProductsModel]?
     var view: MainViewControllerProtocol?
     var network: NetworkServiceProtocol?
     var router: RouterProtocol?
@@ -34,32 +30,18 @@ class MainPresenter: MainPresenterProtocol{
     }
     
     private func sendRequest(){
-        network?.getProductsListData(completion: { [weak self] productListDataSet in
-            self?.dataList = productListDataSet
+        network?.getProductsList(completion: { [weak self] receivedData in
+            self?.products = receivedData
             self?.view?.loadingComplete()
         })
     }
     
     func sendSearchRequest(searchRequset: String) {
-        network?.getFilteredProductList(searchRequest: searchRequset, completion: { [weak self] filteredListData in
-            self?.filterDataList = filteredListData
-            
+        network?.getFilteredData(searchRequest: searchRequset, completion: { [weak self] filteredData in
+            self?.filteredProducts = filteredData
             self?.view?.loadingComplete()
         })
     }
-    
-    private func processProductListDataSet(receivedData: [ProgectDataListModel]) -> [ProssecedProductListData]{
-        var result: [ProssecedProductListData] = []
-        receivedData.map { item in
-            result.append(ProssecedProductListData(id: item.id,
-                                                   image: self.network?.loadPicture(path: item.categories?.image),
-                                                   name: item.name,
-                                                   description: item.description))
-        }
-
-        return result
-    }
-    
     func showDetail(id: Int){
         router?.initializeDetailVC(id: id)
     }
