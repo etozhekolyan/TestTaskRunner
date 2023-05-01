@@ -19,7 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 navigationBarAppearance.titleTextAttributes = [
                     NSAttributedString.Key.foregroundColor : UIColor.white
                 ]
-                navigationBarAppearance.backgroundColor = .green
+                navigationBarAppearance.backgroundColor = UIColor(red: CGFloat(93)/CGFloat(255),
+                                                                  green: CGFloat(172)/CGFloat(255),
+                                                                  blue: CGFloat(74)/CGFloat(255),
+                                                                  alpha: 1.0)
                 UINavigationBar.appearance().standardAppearance = navigationBarAppearance
                 UINavigationBar.appearance().compactAppearance = navigationBarAppearance
                 UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance

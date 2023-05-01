@@ -63,6 +63,7 @@ class MainViewController: UIViewController {
     @objc func searchButtonHundler() {
         searchView?.titleName.isHidden = true
         searchView?.searchBar.isHidden = false
+        searchView?.searchBar.becomeFirstResponder()
     }
     //MARK: - Constraints
     private func constrainsForCardsCollectionView(){
@@ -81,10 +82,15 @@ extension MainViewController: UISearchBarDelegate{
 }
 //MARK: - Collection view delegate
 extension MainViewController: UICollectionViewDelegate{
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let product = presenter?.productsListData?[indexPath.row]
-//        presenter?.showDetail(id: product?.id ?? 0)
-//    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if searchBarIsEmpty{
+            let unit = presenter?.dataList?[indexPath.row].id ?? 0
+            presenter?.showDetail(id: unit)
+        }else{
+            let unit = presenter?.filterDataList?[indexPath.row].id ?? 0
+            presenter?.showDetail(id: unit)
+        }
+    }
 }
 //MARK: - Collection view flow layout delegate
 extension MainViewController: UICollectionViewDelegateFlowLayout{
@@ -129,7 +135,7 @@ extension UIViewController{
     func createSearchButton(selector: Selector) -> UIBarButtonItem{
         let button = UIButton(type: .system) // magnifyingglass
         button.setImage(UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         button.imageView?.contentMode = .scaleAspectFit
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill

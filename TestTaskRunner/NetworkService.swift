@@ -104,7 +104,7 @@ extension ProductsRequests: TargetType{
     var task: Moya.Task {
         switch self{
         case .getFilteredList(let searchRequest):
-            return .requestParameters(parameters: ["Search" : searchRequest], encoding: URLEncoding.queryString)
+            return .requestParameters(parameters: ["search" : searchRequest], encoding: URLEncoding.queryString)
         case .getProductsList, .getProductInfo:
             return .requestPlain
         }

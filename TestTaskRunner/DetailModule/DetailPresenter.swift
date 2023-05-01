@@ -7,7 +7,7 @@
 
 import Foundation
 protocol DetailPresenterProtocol{
-    var processedData: ProcessedDetailData? { get set }
+    var processedData: DetailProductDataModel? { get set }
     init(id: Int, view: DetailViewControllerProtocol?, networkService: NetworkServiceProtocol?, router: RouterProtocol?)
 }
 
@@ -17,7 +17,7 @@ class DetailPresenter: DetailPresenterProtocol{
     var networkService: NetworkServiceProtocol?
     var router: RouterProtocol?
     var id: Int?
-    var processedData: ProcessedDetailData?
+    var processedData: DetailProductDataModel?
     
     required init(id: Int, view: DetailViewControllerProtocol?, networkService: NetworkServiceProtocol?, router: RouterProtocol?) {
         self.view = view
@@ -29,20 +29,20 @@ class DetailPresenter: DetailPresenterProtocol{
     
     private func sendRequest(id: Int){
         networkService?.getDetailData(id: id, completion: { [weak self] detailProductData in
-            self?.processedData = self?.setupDetailData(receivedData: detailProductData)
+            self?.processedData = detailProductData
             self?.view?.loadingComplete()
         })
     }
     
-    private func setupDetailData(receivedData: DetailProductDataModel) -> ProcessedDetailData{
-        
-        return ProcessedDetailData(
-            id: receivedData.id,
-            image: networkService?.loadPicture(path: receivedData.image),
-            categoriesIcon: networkService?.loadPicture(path: receivedData.categories?.icon),
-            categoriesName: receivedData.name,
-            name: receivedData.name,
-            description: receivedData.description
-        )
-    }
+//    private func setupDetailData(receivedData: DetailProductDataModel) -> ProcessedDetailData{
+//
+//        return ProcessedDetailData(
+//            id: receivedData.id,
+//            image: networkService?.loadPicture(path: receivedData.image),
+//            categoriesIcon: networkService?.loadPicture(path: receivedData.categories?.icon),
+//            categoriesName: receivedData.name,
+//            name: receivedData.name,
+//            description: receivedData.description
+//        )
+//    }
 }

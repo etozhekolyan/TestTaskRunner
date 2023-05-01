@@ -28,7 +28,6 @@ class ItemCard: UICollectionViewCell{
     }()
     public var itemsHead: UILabel = {
         let label = UILabel(frame: .zero)
-        label.layer.borderWidth = 1
         label.numberOfLines = 0
         label.font = UIFont(name: "HelveticaNeue-Bold", size: 13.0)
         label.sizeToFit()
@@ -37,9 +36,8 @@ class ItemCard: UICollectionViewCell{
     }()
     public var itemsDiscription: UILabel = {
         let label = UILabel(frame: .zero)
-        label.layer.borderWidth = 1 
         label.numberOfLines = 0
-        label.font = UIFont(name: "SF-Pro-Display", size: 12.0)
+        label.font = UIFont(name: "HelveticaNeue", size: 15.0)
         label.textColor = .gray
         label.sizeToFit()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -96,13 +94,13 @@ class ItemCard: UICollectionViewCell{
         itemsHead.widthAnchor.constraint(equalToConstant: 140).isActive = true
         itemsHead.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 12).isActive = true
         itemsHead.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12).isActive = true
-        itemsHead.bottomAnchor.constraint(equalTo: itemsDiscription.topAnchor,constant: 5).isActive = true
+        itemsHead.bottomAnchor.constraint(equalTo: itemsDiscription.topAnchor,constant: -5).isActive = true
         
         itemsDiscription.widthAnchor.constraint(equalToConstant: 140).isActive = true
         itemsDiscription.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 1/3).isActive = true
         itemsDiscription.topAnchor.constraint(equalTo: itemsHead.bottomAnchor, constant: 6).isActive = true
         itemsDiscription.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 12).isActive = true
         itemsDiscription.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12).isActive = true
-        itemsDiscription.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        itemsDiscription.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -50).isActive = true
     }
 }

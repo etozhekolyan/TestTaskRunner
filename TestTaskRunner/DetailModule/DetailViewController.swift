@@ -30,14 +30,15 @@ extension DetailViewController: DetailViewControllerProtocol{
     func loadingComplete() {
         detailView?.nameLabel.text = presenter?.processedData?.name ?? "--"
         detailView?.discriptionLabel.text = presenter?.processedData?.description ?? "--"
-        detailView?.productImage.image = UIImage(data: presenter?.processedData?.image ?? Data())
-        detailView?.categoryIcon.image = UIImage(data: presenter?.processedData?.categoriesIcon ?? Data())
+        detailView?.productImage.imageFromServerURL("http://shans.d2.i-partner.ru\(presenter?.processedData?.image ?? "")", placeHolder: nil)
+        detailView?.categoryIcon.imageFromServerURL("http://shans.d2.i-partner.ru\(presenter?.processedData?.categories?.icon ?? "")", placeHolder: nil)
     }
+}
+    //MARK: - Navigation bar configure
+extension DetailViewController{
+        private func configureNBTitle(){
+            navigationController?.navigationBar.topItem?.backButtonDisplayMode = .minimal // remove text from back button
+            navigationController?.navigationBar.tintColor = .white
+        }
 }
 
-//MARK: - Navigation bar configure
-extension DetailViewController{
-    private func configureNBTitle(){
-        navigationController?.navigationBar.topItem?.backButtonDisplayMode = .minimal // remove text from back button
-    }
-}

@@ -38,7 +38,6 @@ class DetailView: UIView {
     }()
     public var nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
-        label.layer.borderWidth = 1
         label.numberOfLines = 0
         label.font = UIFont(name: "HelveticaNeue-Bold", size: 15.0)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -46,7 +45,6 @@ class DetailView: UIView {
     }()
     public var discriptionLabel: UILabel = {
         let label = UILabel(frame: .zero)
-        label.layer.borderWidth = 1
         label.numberOfLines = 0
         label.font = UIFont(name: "SF-Pro-Display", size: 15.0)
         label.textColor = .gray
@@ -131,7 +129,7 @@ class DetailView: UIView {
         nameLabel.bottomAnchor.constraint(equalTo: discriptionLabel.topAnchor, constant: -8).isActive = true
         
         discriptionLabel.widthAnchor.constraint(equalToConstant: 328).isActive = true
-        discriptionLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        discriptionLabel.heightAnchor.constraint(equalToConstant: 150).isActive = true
         discriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8).isActive = true
         discriptionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 14).isActive = true
         discriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -33).isActive = true
@@ -142,7 +140,5 @@ class DetailView: UIView {
         buyButton.topAnchor.constraint(equalTo: discriptionLabel.bottomAnchor, constant: 15).isActive = true
         buyButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
         buyButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15).isActive = true
-        //        buyButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -250).isActive = true
-        
     }
 }

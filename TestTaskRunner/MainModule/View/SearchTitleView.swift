@@ -27,7 +27,9 @@ class SearchTitleView: UIView{
     }()
     public var titleName: UILabel = {
         let label = UILabel(frame: CGRect(x: 90, y: 5, width: 100, height: 30))
-        label.text = "Default"
+        label.text = "Химикаты"
+        label.font = UIFont(name: "HelveticaNeue-Bold", size: 17.0)
+        label.textColor = .white
         label.textAlignment = .center
         return label
     }()
