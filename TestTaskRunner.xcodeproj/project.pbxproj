@@ -89,9 +89,9 @@
 			isa = PBXGroup;
 			children = (
 				4F1619A829FD6D1600E726C5 /* DetailViewController.swift */,
+				4F1619AF29FECDB400E726C5 /* DetailView.swift */,
 				4F1619AB29FD6D6700E726C5 /* DetailProductDataModel.swift */,
 				4F1619AD29FD6DDB00E726C5 /* DetailPresenter.swift */,
-				4F1619AF29FECDB400E726C5 /* DetailView.swift */,
 			);
 			path = DetailModule;
 			sourceTree = "<group>";

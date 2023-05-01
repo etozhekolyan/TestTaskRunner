@@ -15,15 +15,15 @@ class SearchTitleView: UIView{
         fatalError("init(coder:) has not been implemented")
     }
     private func setupView(){
-        addSubview(searchField)
+        addSubview(searchBar)
         addSubview(titleName)
     }
-   public var searchField: UITextField = {
-       let textField = UITextField(frame: CGRect(x: 5, y: 5, width: 270, height: 30))
-        textField.placeholder = "Search..."
-        textField.clearButtonMode = .whileEditing
-        textField.isHidden = true
-        return textField
+    public var searchBar: UISearchBar = {
+       let searchBar = UISearchBar(frame: CGRect(x: 5, y: 5, width: 270, height: 30))
+        searchBar.placeholder = "Search..."
+        searchBar.isHidden = true
+        searchBar.setImage(UIImage(), for: .search, state: .normal)
+        return searchBar
     }()
     public var titleName: UILabel = {
         let label = UILabel(frame: CGRect(x: 90, y: 5, width: 100, height: 30))

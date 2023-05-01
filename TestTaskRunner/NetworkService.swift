@@ -11,6 +11,7 @@ import Moya
 protocol NetworkServiceProtocol{
     func getProductsListData(completion: @escaping (([ProgectDataListModel]) -> Void))
     func getDetailData(id: Int, completion: @escaping ((DetailProductDataModel) -> Void))
+    func getFilteredProductList(searchRequest: String, completion: @escaping (([ProgectDataListModel]) -> Void))
     func loadPicture(path: String?) -> Data?
 }
 
@@ -49,6 +50,24 @@ class NetworkService: NetworkServiceProtocol{
         })
     }
     
+    func getFilteredProductList(searchRequest: String, completion: @escaping (([ProgectDataListModel]) -> Void)) {
+        provider?.request(.getFilteredList(searchRequest: searchRequest), completion: { result in
+            switch result{
+            case .success(let sucssesResponse):
+                do{
+                    let decodedData = try JSONDecoder().decode([ProgectDataListModel].self, from: sucssesResponse.data)
+                    
+                    completion(decodedData)
+                }catch(let jsonError){
+                    print("Here \(jsonError)")
+                }
+            case .failure(let failureResponse):
+                
+                print("Here \(failureResponse)")
+            }
+        })
+    }
+    
     func loadPicture(path: String?) -> Data? {
         guard let checkedPath = path else {return nil}
         let completePath = "http://shans.d2.i-partner.ru\(checkedPath)"
@@ -62,6 +81,11 @@ class NetworkService: NetworkServiceProtocol{
 enum ProductsRequests{
     case getProductsList
     case getProductInfo(id: Int)
+    case getFilteredList(searchRequest: String)
+    
+    func encodeSearchRequest(searchRequest: String) -> String{
+        return searchRequest.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+    }
 }
 
 extension ProductsRequests: TargetType{
@@ -72,17 +96,21 @@ extension ProductsRequests: TargetType{
             return "/api/ppp/index/"
         case .getProductInfo(let id):
             return "/api/ppp/item/?id=\(id)"
+        case .getFilteredList(let searchRequest):
+            let encodedSearchRequest = encodeSearchRequest(searchRequest: searchRequest)
+            
+            return "/api/ppp/index/?search=\(encodedSearchRequest)"
         }
     }
     var method: Moya.Method {
         switch self{
-        case .getProductInfo, .getProductsList:
+        case .getProductInfo, .getProductsList, .getFilteredList:
             return .get
         }
     }
     var task: Moya.Task {
         switch self{
-        case .getProductsList, .getProductInfo:
+        case .getProductsList, .getProductInfo, .getFilteredList:
             return .requestPlain
         }
     }
